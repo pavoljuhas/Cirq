@@ -42,10 +42,6 @@ from cirq.optimizers.eject_z import (
     EjectZ,
 )
 
-from cirq.optimizers.expand_composite import (
-    ExpandComposite,
-)
-
 from cirq.optimizers.merge_interactions import (
     MergeInteractions,
 )

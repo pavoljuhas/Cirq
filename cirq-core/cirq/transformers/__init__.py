@@ -35,6 +35,10 @@ from cirq.transformers.analytical_decompositions import (
     two_qubit_matrix_to_sqrt_iswap_operations,
 )
 
+from cirq.transformers.expand_composite import (
+    ExpandComposite,
+)
+
 from cirq.transformers.heuristic_decompositions import (
     TwoQubitGateTabulation,
     TwoQubitGateTabulationResult,

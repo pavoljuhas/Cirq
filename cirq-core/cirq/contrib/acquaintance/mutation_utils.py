@@ -16,7 +16,7 @@ import collections
 
 from typing import cast, Dict, List, Optional, Sequence, Union, TYPE_CHECKING
 
-from cirq import circuits, ops, optimizers
+from cirq import circuits, ops, transformers
 
 from cirq.contrib.acquaintance.gates import SwapNetworkGate, AcquaintanceOpportunityGate
 from cirq.contrib.acquaintance.devices import is_acquaintance_strategy, get_acquaintance_size
@@ -106,7 +106,7 @@ def replace_acquaintance_with_swap_network(
     return reflected
 
 
-class ExposeAcquaintanceGates(optimizers.ExpandComposite):
+class ExposeAcquaintanceGates(transformers.ExpandComposite):
     """Decomposes permutation gates that provide acquaintance opportunities."""
 
     def __init__(self):

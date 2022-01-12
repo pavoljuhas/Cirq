@@ -26,7 +26,7 @@ from typing import (
     TYPE_CHECKING,
 )
 
-from cirq import circuits, ops, optimizers, protocols, value
+from cirq import circuits, ops, protocols, transformers, value
 from cirq.type_workarounds import NotImplementedType
 
 if TYPE_CHECKING:
@@ -278,7 +278,7 @@ def get_logical_operations(
             yield op.transform_qubits(mapping.__getitem__)
 
 
-class DecomposePermutationGates(optimizers.ExpandComposite):
+class DecomposePermutationGates(transformers.ExpandComposite):
     def __init__(self, keep_swap_permutations: bool = True):
         """Decomposes permutation gates.
 
