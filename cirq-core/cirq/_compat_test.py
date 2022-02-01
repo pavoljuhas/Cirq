@@ -798,6 +798,8 @@ def _test_broken_module_2_inner():
 
 
 def _test_broken_module_3_inner():
+    import cirq.testing._compat_test_data
+
     with cirq.testing.assert_deprecated(deadline="v0.20", count=None):
         with pytest.raises(
             DeprecatedModuleImportError,
@@ -807,15 +809,15 @@ def _test_broken_module_3_inner():
 
 
 def test_deprecated_module_error_handling_1():
-    subprocess_context(_test_broken_module_1_inner())
+    subprocess_context(_test_broken_module_1_inner)()
 
 
 def test_deprecated_module_error_handling_2():
-    subprocess_context(_test_broken_module_2_inner())
+    subprocess_context(_test_broken_module_2_inner)()
 
 
 def test_deprecated_module_error_handling_3():
-    subprocess_context(_test_broken_module_3_inner())
+    subprocess_context(_test_broken_module_3_inner)()
 
 
 def test_new_module_is_top_level():
