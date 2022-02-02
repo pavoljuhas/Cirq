@@ -667,7 +667,6 @@ def _test_deprecated_module_inner(outdated_method, deprecation_messages):
             deadline='v0.20',
             count=len(deprecation_messages),
         ):
-            import warnings
 
             warnings.simplefilter('always')
             outdated_method()
@@ -785,6 +784,7 @@ def _test_broken_module_1_inner():
 
 
 def _test_broken_module_2_inner():
+    warnings.simplefilter('always')
     with cirq.testing.assert_deprecated(deadline="v0.20", count=None):
         with pytest.raises(
             DeprecatedModuleImportError,
@@ -800,6 +800,7 @@ def _test_broken_module_2_inner():
 def _test_broken_module_3_inner():
     import cirq.testing._compat_test_data
 
+    warnings.simplefilter('always')
     with cirq.testing.assert_deprecated(deadline="v0.20", count=None):
         with pytest.raises(
             DeprecatedModuleImportError,
