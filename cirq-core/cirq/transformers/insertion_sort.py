@@ -36,14 +36,14 @@ def insertion_sort_transformer(
         context: optional TransformerContext (not used),
     """
     final_operations: List['cirq.Operation'] = []
-    for op in circuit.all_operations():
-        st = []
-        while (
-            len(final_operations)
-            and op.qubits < final_operations[-1].qubits
-            and protocols.commutes(final_operations[-1], op, default=False)
-        ):
-            st.append(final_operations.pop())
-        final_operations.append(op)
-        final_operations.extend(st[::-1])
+    sorted_qubits: Dict[int, List['cirq.Qid']] = {}
+    for pos, op in enumerate(circuit.all_operations()):
+        op_qubits = sorted_qubits[id(op)] = sorted(op.qubits)
+        for tail_op in reversed(final_operations):
+            tail_qubits = sorted_qubits[id(tail_op)]
+            if op_qubits < tail_qubits and protocols.commutes(tail_op, op, default=False):
+                pos -= 1
+                continue
+            break
+        final_operations.insert(pos, op)
     return circuits.Circuit(final_operations)
