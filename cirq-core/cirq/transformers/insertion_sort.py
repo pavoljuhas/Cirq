@@ -14,26 +14,13 @@
 
 """Transformer that sorts commuting operations in increasing order of their `.qubits` tuple."""
 
-import heapq
-from typing import Dict, Iterator, List, Optional, TYPE_CHECKING
+from typing import Dict, List, Optional, TYPE_CHECKING
 
 from cirq import protocols, circuits
 from cirq.transformers import transformer_api
 
 if TYPE_CHECKING:
     import cirq
-
-
-def _is_disjoint(indices0: List[int], indices1: List[int]) -> bool:
-    """Return True if two sorted lists of unique integers are disjoint."""
-    if indices0 and indices1:
-        merged_indices = iter(heapq.merge(indices0, indices1))
-        last = next(merged_indices)
-        for cur in merged_indices:
-            if cur == last:
-                return False
-            last = cur
-    return True
 
 
 @transformer_api.transformer(add_deep_support=True)
@@ -57,10 +44,11 @@ def insertion_sort_transformer(
         op_qubit_indices = cached_qubit_indices.get(id(op)) or cached_qubit_indices.setdefault(
             id(op), sorted(qubit_index[q] for q in op.qubits)
         )
+        op_qubit_indices_set = frozenset(op_qubit_indices)
         for tail_op in reversed(final_operations):
             tail_qubit_indices = cached_qubit_indices[id(tail_op)]
             if op_qubit_indices < tail_qubit_indices and (
-                _is_disjoint(op_qubit_indices, tail_qubit_indices)
+                op_qubit_indices_set.isdisjoint(tail_qubit_indices)
                 or protocols.commutes(op, tail_op, default=False)
             ):
                 pos -= 1
