@@ -22,9 +22,11 @@ def test_insertion_sort():
         cirq.CZ(cirq.q(2), cirq.q(4)),
         cirq.CZ(cirq.q(0), cirq.q(1)),
         cirq.CZ(cirq.q(2), cirq.q(1)),
+        cirq.GlobalPhaseGate(1j).on(),
     )
     sorted_circuit = cirq.transformers.insertion_sort_transformer(c)
     assert sorted_circuit == cirq.Circuit(
+        cirq.GlobalPhaseGate(1j).on(),
         cirq.CZ(cirq.q(0), cirq.q(1)),
         cirq.CZ(cirq.q(2), cirq.q(1)),
         cirq.CZ(cirq.q(2), cirq.q(1)),
