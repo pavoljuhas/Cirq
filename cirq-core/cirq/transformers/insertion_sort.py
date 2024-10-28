@@ -41,14 +41,17 @@ def insertion_sort_transformer(
     }
     cached_qubit_indices: Dict[int, List[int]] = {}
     for pos, op in enumerate(circuit.all_operations()):
-        op_qubit_indices = cached_qubit_indices.get(id(op)) or cached_qubit_indices.setdefault(
-            id(op), sorted(qubit_index[q] for q in op.qubits)
-        )
-        op_qubit_indices_set = frozenset(op_qubit_indices)
+        if (op_qubit_indices := cached_qubit_indices.get(id(op))) is None:
+            op_qubit_indices = cached_qubit_indices[id(op)] = sorted(
+                qubit_index[q] for q in op.qubits
+            )
         for tail_op in reversed(final_operations):
             tail_qubit_indices = cached_qubit_indices[id(tail_op)]
             if op_qubit_indices < tail_qubit_indices and (
-                op_qubit_indices_set.isdisjoint(tail_qubit_indices)
+                # check if two sorted sequences are disjoint
+                op_qubit_indices[-1] < tail_qubit_indices[0]
+                or set(op_qubit_indices).isdisjoint(tail_qubit_indices)
+                # fallback to more expensive commutation check
                 or protocols.commutes(op, tail_op, default=False)
             ):
                 pos -= 1
