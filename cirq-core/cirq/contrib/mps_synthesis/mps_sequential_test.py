@@ -32,7 +32,7 @@ def test_compile_single_qubit_state() -> None:
 def test_compile_area_law_states(num_qubits: int) -> None:
     # Given `random_superposition` can generate volume-law entangled states,
     # we manually construct an exclusively area-law entangled state here
-    state = np.random.rand(2**num_qubits) + 1j * np.random.rand(2**num_qubits)
+    state = (2 * np.random.rand(2**num_qubits) - 1) + 1j * (2 * np.random.rand(2**num_qubits) - 1)
     state /= np.linalg.norm(state)
 
     circuit: cirq.Circuit = mps_circuit_from_statevector(state, max_num_layers=6)
