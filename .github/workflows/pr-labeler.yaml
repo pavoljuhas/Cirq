@@ -84,16 +84,14 @@ jobs:
     runs-on: ubuntu-slim
     timeout-minutes: 5
     permissions:
-      contents: read
+      contents: write
       issues: write
       pull-requests: write
     steps:
       - name: Convert to draft and attach the on-hold label
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          PULL_REQUEST_URL: ${{github.event.pull_request.html_url}}
         run: |
-          gh pr --repo ${{github.repository}} \
-            edit ${{github.event.pull_request.number}} \
-            --add-label status/on-hold
-          gh pr --repo ${{github.repository}} \
-            ready ${{github.event.pull_request.number}} --undo
+          gh pr ready "${PULL_REQUEST_URL}" --undo
+          gh pr edit "${PULL_REQUEST_URL}" --add-label status/on-hold
